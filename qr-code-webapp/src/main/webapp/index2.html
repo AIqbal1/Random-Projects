@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>webRTC Test</title>
+        
+	<script type="text/javascript" src="resources/js/grid.js"></script>
+	<script type="text/javascript" src="resources/js/version.js"></script>
+	<script type="text/javascript" src="resources/js/detector.js"></script>
+	<script type="text/javascript" src="resources/js/formatinf.js"></script>
+	<script type="text/javascript" src="resources/js/errorlevel.js"></script>
+	<script type="text/javascript" src="resources/js/bitmat.js"></script>
+	<script type="text/javascript" src="resources/js/datablock.js"></script>
+	<script type="text/javascript" src="resources/js/bmparser.js"></script>
+	<script type="text/javascript" src="resources/js/datamask.js"></script>
+	<script type="text/javascript" src="resources/js/rsdecoder.js"></script>
+	<script type="text/javascript" src="resources/js/gf256poly.js"></script>
+	<script type="text/javascript" src="resources/js/gf256.js"></script>
+	<script type="text/javascript" src="resources/js/decoder.js"></script>
+	<script type="text/javascript" src="resources/js/qrcode.js"></script>
+	<script type="text/javascript" src="resources/js/findpat.js"></script>
+	<script type="text/javascript" src="resources/js/alignpat.js"></script>
+	<script type="text/javascript" src="resources/js/databr.js"></script>  
+	      
+    <script>
+    
+	    var gCtx = null;
+		var gCanvas = null;
+	
+		var imageData = null;
+		var ii=0;
+		var jj=0;
+		var c=0;
+
+	    function read(a)
+	    {
+	    	alert("over..here...");
+	    	alert(a);
+	    }	    
+    
+	    function init()
+	    {
+	        if(navigator.webkitGetUserMedia)
+	        {
+	            navigator.webkitGetUserMedia('video', onSuccess, onFail);
+	        }
+	        else
+	        {
+	            alert('webRTC not available');
+	        }	        
+	        initCanvas(240, 240)
+	    	qrcode.callback = read;	    	
+	    }
+	    
+	    function initCanvas(ww,hh)
+		{			
+			var w = ww;
+			var h = hh;
+			gCanvas = document.getElementById("qr-canvas");
+			gCanvas.style.width = w + "px";
+			gCanvas.style.height = h + "px";
+			gCanvas.width = w;
+			gCanvas.height = h;
+			gCtx = gCanvas.getContext("2d");
+			gCtx.clearRect(0, 0, w, h);
+			imageData = gCtx.getImageData( 0,0,240,240);
+		}	    
+	
+	    function onSuccess(stream)
+	    {
+	        document.getElementById('camFeed').src = webkitURL.createObjectURL(stream);
+	    }
+	
+	    function onFail()
+	    {
+	        alert('could not connect stream');
+	    }
+	    
+	    function takePhoto()
+	    {
+	        var c = document.getElementById('qr-canvas');
+	        var v = document.getElementById('camFeed');
+	        c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+	        qrcode.decode();
+	    }
+
+    </script>    
+        
+    </head>
+
+    <script type="text/javascript">
+
+    </script>
+
+    <body onload="init();" style="background-color:#ababab;" >
+        <div>
+            <div>
+	            <video id="camFeed" width="240" height="240" autoplay>
+		        </video>
+	        </div>
+
+            <div>
+                <canvas id="qr-canvas" width="240" height="240">
+                </canvas>
+            </div>
+
+            <div style="margin:0 auto; width:82px;">
+                <input type="button" value="Take Photo" onclick="takePhoto();">
+            </div>
+        </div>
+
+    </body>
+</html>
